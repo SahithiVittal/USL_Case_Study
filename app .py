@@ -1,4 +1,4 @@
-%%writefile app.py
+
 import streamlit as st
 import numpy as np
 import pandas as pd
@@ -10,14 +10,18 @@ with open('final_model.pkl','rb') as file:
     
 def prediction(input_list):
 
+    tran_data = pt.transform([[input_list[0],input_list[3]]])
+    input_list[0] = tran_data[0][0]
+    input_list[3] = tran_data[0][1]
+
     input_list = np.array(input_list,dtype=object)
       
     pred = model.predict_proba([input_list])[:,1][0]
     
-    if pred>0.187:
-        return f'This booking is more likely to get canceled'
+    if pred>0.5:
+        return f'This booking is more likely to get canceled: Chances {round(pred,2)}'
     else:
-        return f'This booking is less likely to get canceled'
+        return f'This booking is less likely to get canceled: Chances {round(pred,2)}'
     
 def main():
     st.title('INN HOTEL GROUP')
